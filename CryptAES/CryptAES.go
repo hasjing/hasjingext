@@ -1,5 +1,5 @@
 // package CryptAES
-// 说明，实现CBC模式的加密与解密，块填充采用 PKCS7
+// 说明，实现CBC模式的AES 加密与解密，块填充采用 PKCS7
 package CryptAES
 
 import (
@@ -10,21 +10,27 @@ import (
 	"fmt"
 )
 
-// PKCS7Padding
+//PKCS7Padding
 func PKCS7Padding(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padtext...)
 }
 
-// PKCS7UnPadding
+//PKCS7UnPadding
 func PKCS7UnPadding(origData []byte) []byte {
 	length := len(origData)
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
 }
 
-// AesEncrypt 加密
+//AesEncrypt ASE加密
+//		key := []byte("中文一二三四五六")
+//		result, err := AesEncrypt([]byte("1111111111111111111111111111111111111111111111111111111111"), key)
+//		if err != nil {
+//			panic(err)
+//		}
+//		fmt.Println(base64.StdEncoding.EncodeToString(result))
 func AesEncrypt(origData, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -38,7 +44,12 @@ func AesEncrypt(origData, key []byte) ([]byte, error) {
 	return crypted, nil
 }
 
-// AesDecrypt 加密
+// AesDecrypt 解密
+//		origData, err := AesDecrypt(result, key)
+//		if err != nil {
+//			panic(err)
+//		}
+//		fmt.Println(string(origData))
 func AesDecrypt(crypted, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
